@@ -21,7 +21,6 @@ export function augmentPrompt(userPrompt: string): string {
 // OpenRouter model IDs per provider variant
 const OPENROUTER_MODELS: Record<string, string> = {
   'openrouter': 'google/gemini-2.5-flash-image',
-  'openrouter-flash-image': 'google/gemini-2.5-flash-image-preview:free',
   'openrouter-gemini-pro': 'google/gemini-3-pro-image-preview',
   'openrouter-gemini-31': 'google/gemini-3.1-flash-image-preview',
 };

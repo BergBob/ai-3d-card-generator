@@ -25,7 +25,7 @@ export interface TextOverlay {
   fontFamily: string; // font name
 }
 
-export type AIProvider = 'openrouter' | 'openrouter-gemini-pro' | 'openrouter-gemini-31' | 'openrouter-flash-image' | 'dalle3' | 'stability' | 'google-imagen';
+export type AIProvider = 'openrouter' | 'openrouter-gemini-pro' | 'openrouter-gemini-31' | 'dalle3' | 'stability' | 'google-imagen';
 
 export interface GenerateImageRequest {
   prompt: string;
