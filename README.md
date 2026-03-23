@@ -39,23 +39,43 @@ You only need a key for the provider(s) you want to use. Keys can also be entere
 
 ## Quick Start
 
+### Easy Start (Double-Click)
+
+No terminal needed! Just double-click the start file for your operating system:
+
+| OS | File | How to use |
+|---|---|---|
+| **macOS** | `start.command` | Double-click in Finder |
+| **Windows** | `start.bat` | Double-click in Explorer |
+| **Linux** | `start.sh` | Double-click in file manager (or run `./start.sh`) |
+
+The start file will:
+- ✅ Check that Node.js is installed
+- 📦 Install dependencies automatically (first run only)
+- 🚀 Start the server
+- 🌐 Open the app in your browser
+
+### Manual Start (Terminal)
+
 ```bash
 # Clone the repository
-git clone https://github.com/<your-username>/ai-3d-card-generator.git
+git clone https://github.com/BergBob/ai-3d-card-generator.git
 cd ai-3d-card-generator
 
 # Install dependencies
 npm install
-
-# Create your environment file
-cp .env.example .env
-# Edit .env and add at least one API key
 
 # Start the development server
 npm run dev
 ```
 
 The app will be available at `http://localhost:5173` (Vite dev server). The backend API runs on the port specified in `.env` (default `3001`).
+
+### API Key Setup
+
+You can add API keys in two ways:
+1. **In the app** -- Click the ⚙ Settings icon in the top right corner
+2. **Via .env file** -- Copy `.env.example` to `.env` and add your keys
 
 ## Available Scripts
 
