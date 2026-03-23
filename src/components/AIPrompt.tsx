@@ -21,6 +21,7 @@ interface AvailableModel {
 
 const ALL_MODELS: { value: AIProvider; label: string; keyField: string }[] = [
   { value: 'openrouter', label: 'Gemini 2.5 Flash', keyField: 'openrouterKey' },
+  { value: 'openrouter-flash-image', label: 'Gemini 2.5 Flash Image (Free)', keyField: 'openrouterKey' },
   { value: 'openrouter-gemini-pro', label: 'Gemini 3 Pro', keyField: 'openrouterKey' },
   { value: 'openrouter-gemini-31', label: 'Gemini 3.1 Flash', keyField: 'openrouterKey' },
   { value: 'dalle3', label: 'DALL-E 3', keyField: 'openaiKey' },
