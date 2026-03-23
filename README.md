@@ -2,8 +2,7 @@
 
 Generate unique, 3D-printable greeting cards from AI-generated images. Describe what you want, pick an AI image provider, and the app turns your idea into a printable STL or 3MF file -- ready for your 3D printer.
 
-![Screenshot](docs/screenshot.png)
-<!-- Replace with an actual screenshot of the application -->
+<img width="2121" height="1414" alt="Xnapper-2026-03-23-07 52 16" src="https://github.com/user-attachments/assets/4d98d6bb-2991-4c72-b0f3-1ada4d1b7de3" />
 
 ## Features
 
