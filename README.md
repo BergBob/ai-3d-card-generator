@@ -6,7 +6,7 @@ Generate unique, 3D-printable greeting cards from AI-generated images. Describe 
 
 ## Features
 
-- Text-to-image generation with multiple AI providers
+- Text-to-image generation powered by Google Gemini
 - Automatic image-to-vector conversion using Potrace
 - Real-time 3D preview with Three.js
 - Configurable card dimensions, border, and relief depth
@@ -23,14 +23,12 @@ Generate unique, 3D-printable greeting cards from AI-generated images. Describe 
 
 ## Supported AI Providers
 
-| Provider | Environment Variable |
-|---|---|
-| [OpenRouter](https://openrouter.ai/) (Gemini Flash / Pro) | `OPENROUTER_API_KEY` |
-| [OpenAI DALL-E 3](https://platform.openai.com/) | `OPENAI_API_KEY` |
-| [Stability AI](https://stability.ai/) | `STABILITY_API_KEY` |
-| [Google Imagen](https://ai.google.dev/) | `GOOGLE_AI_API_KEY` |
+| Provider | Models | Environment Variable |
+|---|---|---|
+| [OpenRouter](https://openrouter.ai/) | Gemini 2.5 Flash, 3 Pro, 3.1 Flash | `OPENROUTER_API_KEY` |
+| [Google AI Studio](https://aistudio.google.com/) | Gemini 2.5 Flash | `GOOGLE_AI_API_KEY` |
 
-You only need a key for the provider(s) you want to use. Keys can also be entered at runtime through the in-app Settings dialog.
+You only need a key for one of the two providers. Keys can be entered at runtime through the in-app Settings dialog (click the gear icon).
 
 ## Prerequisites
 
