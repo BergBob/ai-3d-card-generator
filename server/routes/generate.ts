@@ -19,8 +19,8 @@ router.post('/', async (req, res) => {
     const id = uuidv4();
     const tmpDir = getTmpDir();
 
-    // Generate image with AI
-    const imageBuffer = await generateImage(prompt, provider);
+    // Generate image with AI (pass card dimensions for aspect ratio)
+    const imageBuffer = await generateImage(prompt, provider, config.width, config.height);
 
     // Save original (file + memory for re-processing)
     await saveOriginalImage(imageBuffer, tmpDir, id);

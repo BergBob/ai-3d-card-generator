@@ -13,10 +13,8 @@ interface ApiKeys {
 }
 
 const KEY_CONFIGS = [
-  { field: 'openrouterKey' as const, label: 'OpenRouter', placeholder: 'sk-or-...', url: 'https://openrouter.ai/keys', urlLabel: 'openrouter.ai/keys', hint: 'Gemini, FLUX, SDXL and more' },
-  { field: 'openaiKey' as const, label: 'OpenAI', placeholder: 'sk-...', url: 'https://platform.openai.com/api-keys', urlLabel: 'platform.openai.com', hint: 'DALL-E 3' },
-  { field: 'googleAiKey' as const, label: 'Google AI', placeholder: 'AI...', url: 'https://aistudio.google.com/apikey', urlLabel: 'aistudio.google.com', hint: 'Imagen 3' },
-  { field: 'stabilityKey' as const, label: 'Stability AI', placeholder: 'sk-...', url: 'https://platform.stability.ai/account/keys', urlLabel: 'stability.ai', hint: 'Stable Diffusion' },
+  { field: 'openrouterKey' as const, label: 'OpenRouter', placeholder: 'sk-or-...', url: 'https://openrouter.ai/keys', urlLabel: 'openrouter.ai/keys', hint: 'Gemini 2.5 Flash, 3 Pro, 3.1 Flash' },
+  { field: 'googleAiKey' as const, label: 'Google AI Studio', placeholder: 'AI...', url: 'https://aistudio.google.com/apikey', urlLabel: 'aistudio.google.com', hint: 'Gemini Flash (direct)' },
 ];
 
 export function SettingsDialog({ isOpen, onClose }: Props) {

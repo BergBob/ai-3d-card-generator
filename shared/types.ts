@@ -25,7 +25,7 @@ export interface TextOverlay {
   fontFamily: string; // font name
 }
 
-export type AIProvider = 'openrouter' | 'openrouter-gemini-pro' | 'openrouter-gemini-31' | 'dalle3' | 'stability' | 'google-imagen';
+export type AIProvider = 'openrouter' | 'openrouter-gemini-pro' | 'openrouter-gemini-31' | 'openrouter-flux2-pro' | 'openrouter-flux2-max' | 'openrouter-flux2-flex' | 'openrouter-flux2-klein' | 'openrouter-seedream' | 'openrouter-riverflow-pro' | 'openrouter-riverflow-fast' | 'openrouter-riverflow-max' | 'openrouter-riverflow-std' | 'openrouter-gemini-nano' | 'openrouter-gpt5-image' | 'openrouter-gpt5-image-mini' | 'dalle3' | 'stability' | 'google-imagen';
 
 export interface GenerateImageRequest {
   prompt: string;
@@ -51,7 +51,7 @@ export const DEFAULT_CONFIG: CardConfig = {
   reliefHeight: 1.2,
   resolution: 8,
   threshold: 0.7,
-  invert: true,
+  invert: false,
   cornerRadius: 5,
   border: { enabled: false, width: 3, height: 1.2 },
   baseColor: '#e0e0e0',

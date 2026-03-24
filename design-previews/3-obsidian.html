@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 3: Obsidian</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif; background: #000000; color: #e5e5e5; height: 100vh; overflow: hidden; }
+
+.app { display: flex; flex-direction: column; height: 100vh; }
+
+.header {
+  display: flex; align-items: center; padding: 12px 24px; gap: 16px;
+  background: #000000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.header h1 { font-size: 18px; font-weight: 600; color: #ffffff; letter-spacing: -0.3px; }
+.header-spacer { flex: 1; }
+.header-btn {
+  padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent; color: #a3a3a3; font-size: 12px; cursor: pointer; font-weight: 500;
+}
+.header-btn:hover { background: rgba(255,255,255,0.06); color: #ffffff; }
+
+.main { display: flex; flex: 1; overflow: hidden; }
+
+.sidebar {
+  width: 300px; padding: 16px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 1px;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+
+.panel {
+  background: transparent;
+  border: none;
+  border-radius: 0; padding: 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.panel h3 {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+  color: #737373; margin-bottom: 14px; font-weight: 500;
+}
+
+.slider-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.slider-row label { font-size: 13px; color: #a3a3a3; font-weight: 400; }
+.slider-row span { font-size: 13px; color: #ffffff; font-weight: 500; font-variant-numeric: tabular-nums; }
+input[type="range"] {
+  width: 100%; height: 2px; -webkit-appearance: none; appearance: none;
+  background: rgba(255, 255, 255, 0.08); border-radius: 1px; outline: none; margin-top: 4px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.3); cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.3), 0 0 12px rgba(139, 92, 246, 0.5);
+}
+
+.toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.toggle-row label { font-size: 13px; color: #a3a3a3; }
+.toggle { width: 36px; height: 20px; border-radius: 10px; background: rgba(255,255,255,0.08); position: relative; cursor: pointer; }
+.toggle.on { background: #8b5cf6; }
+.toggle::after { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: white; top: 2px; left: 2px; transition: 0.2s; }
+.toggle.on::after { left: 18px; }
+
+.preview-area {
+  flex: 1; margin: 0; overflow: hidden; position: relative;
+  background: #0a0a0a;
+}
+.preview-placeholder {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) perspective(800px) rotateX(25deg) rotateZ(-5deg);
+  width: 400px; height: 260px; border-radius: 8px;
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+}
+.preview-relief {
+  position: absolute; top: 30px; left: 40px; right: 40px; bottom: 40px;
+  background: #8b5cf6;
+  border-radius: 4px; opacity: 0.2;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; font-weight: 600; color: rgba(255,255,255,0.5);
+}
+
+.chat-input { display: flex; gap: 8px; margin-top: 12px; }
+.chat-input textarea {
+  flex: 1; padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,0.03); color: #e5e5e5; font-size: 13px; resize: none; height: 40px;
+}
+.chat-input textarea:focus { border-color: #8b5cf6; outline: none; }
+.chat-input button {
+  width: 40px; height: 40px; border-radius: 8px; border: none;
+  background: #8b5cf6; color: white;
+  font-size: 16px; cursor: pointer; font-weight: bold;
+}
+
+.export-panel { display: flex; gap: 8px; padding-top: 16px; }
+.export-btn {
+  flex: 1; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12); font-size: 13px;
+  font-weight: 500; cursor: pointer; color: #ffffff; background: transparent;
+}
+.export-btn:hover { background: rgba(255,255,255,0.06); }
+.export-btn.primary { background: #8b5cf6; border-color: #8b5cf6; }
+.export-btn.primary:hover { background: #7c3aed; }
+
+.design-label {
+  position: fixed; bottom: 20px; right: 20px; padding: 10px 20px;
+  background: transparent; border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px; font-size: 13px; color: #737373;
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>AI 3D Card Generator</h1>
+    <div class="header-spacer"></div>
+    <button class="header-btn">+ New</button>
+    <button class="header-btn">Save</button>
+    <button class="header-btn">Load</button>
+  </div>
+  <div class="main">
+    <div class="sidebar">
+      <div class="panel">
+        <h3>Card Settings</h3>
+        <div class="slider-row"><label>Width:</label><span>150mm</span></div>
+        <input type="range" value="60">
+        <div class="slider-row"><label>Height:</label><span>100mm</span></div>
+        <input type="range" value="40">
+        <div class="slider-row"><label>Base Thickness:</label><span>1mm</span></div>
+        <input type="range" value="20">
+        <div class="slider-row"><label>Relief Height:</label><span>1.2mm</span></div>
+        <input type="range" value="30">
+        <div class="slider-row"><label>Corner Radius:</label><span>5mm</span></div>
+        <input type="range" value="25">
+        <div class="toggle-row"><label>Invert</label><div class="toggle on"></div></div>
+        <div class="toggle-row"><label>Border</label><div class="toggle"></div></div>
+      </div>
+      <div class="panel">
+        <h3>Design Chat</h3>
+        <div class="chat-input">
+          <textarea placeholder="Birthday cake with candles..."></textarea>
+          <button>&#9654;</button>
+        </div>
+      </div>
+      <div class="export-panel">
+        <button class="export-btn primary">Download 3MF</button>
+        <button class="export-btn">Download STL</button>
+      </div>
+    </div>
+    <div class="preview-area">
+      <div class="preview-placeholder">
+        <div class="preview-relief">Happy Birthday</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="design-label">3/5 — Obsidian</div>
+</body>
+</html>

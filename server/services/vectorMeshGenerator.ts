@@ -40,9 +40,9 @@ export async function generateVectorMesh(
 
   // KI-Bilder sind weiß auf schwarz.
   // Potrace tracet immer die DUNKLEN Pixel.
-  // invert=true (default): Design soll erhöht werden → negate → Design wird dunkel → Potrace tracet Design ✓
-  // invert=false: Hintergrund soll erhöht werden → kein negate → Hintergrund ist dunkel → Potrace tracet Hintergrund ✓
-  if (config.invert) {
+  // invert=false (default): Design soll erhöht werden → negate → Design wird dunkel → Potrace tracet Design ✓
+  // invert=true: Hintergrund soll erhöht werden → kein negate → Hintergrund ist dunkel → Potrace tracet Hintergrund ✓
+  if (!config.invert) {
     processed = processed.negate();
   }
 

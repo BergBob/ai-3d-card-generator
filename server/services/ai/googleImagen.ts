@@ -1,19 +1,30 @@
-export async function generateWithGoogleImagen(prompt: string): Promise<Buffer> {
+export async function generateWithGoogleImagen(
+  prompt: string,
+  aspectRatio: string = '3:2',
+): Promise<Buffer> {
   const apiKey = process.env.GOOGLE_AI_API_KEY;
   if (!apiKey) {
     throw new Error('GOOGLE_AI_API_KEY not set. Add it in Settings.');
   }
 
+  const model = 'gemini-2.5-flash-image';
+
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        instances: [{ prompt }],
-        parameters: {
-          sampleCount: 1,
-          aspectRatio: '3:2',
+        contents: [
+          {
+            parts: [{ text: prompt }],
+          },
+        ],
+        generationConfig: {
+          responseModalities: ['TEXT', 'IMAGE'],
+          imageConfig: {
+            aspectRatio,
+          },
         },
       }),
     },
@@ -21,16 +32,21 @@ export async function generateWithGoogleImagen(prompt: string): Promise<Buffer> 
 
   if (!response.ok) {
     const error = await response.text();
-    throw new Error(`Google Imagen error: ${error}`);
+    throw new Error(`Google AI error: ${error}`);
   }
 
-  const data = await response.json() as {
-    predictions?: Array<{ bytesBase64Encoded: string }>;
-  };
+  const data = await response.json() as Record<string, unknown>;
+  const candidates = (data.candidates as Array<Record<string, unknown>>) || [];
+  const content = candidates[0]?.content as Record<string, unknown> | undefined;
+  const parts = (content?.parts as Array<Record<string, unknown>>) || [];
 
-  if (!data.predictions || data.predictions.length === 0) {
-    throw new Error('Google Imagen returned no image');
+  for (const part of parts) {
+    if (part.inlineData) {
+      const inlineData = part.inlineData as { data: string; mimeType: string };
+      return Buffer.from(inlineData.data, 'base64');
+    }
   }
 
-  return Buffer.from(data.predictions[0].bytesBase64Encoded, 'base64');
+  throw new Error('Google AI returned no image. Response: ' +
+    JSON.stringify(data).substring(0, 500));
 }

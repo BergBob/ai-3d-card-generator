@@ -20,12 +20,12 @@ interface AvailableModel {
 }
 
 const ALL_MODELS: { value: AIProvider; label: string; keyField: string }[] = [
-  { value: 'openrouter', label: 'Gemini 2.5 Flash', keyField: 'openrouterKey' },
-  { value: 'openrouter-gemini-pro', label: 'Gemini 3 Pro', keyField: 'openrouterKey' },
-  { value: 'openrouter-gemini-31', label: 'Gemini 3.1 Flash', keyField: 'openrouterKey' },
-  { value: 'dalle3', label: 'DALL-E 3', keyField: 'openaiKey' },
-  { value: 'google-imagen', label: 'Google Imagen 3', keyField: 'googleAiKey' },
-  { value: 'stability', label: 'Stability AI', keyField: 'stabilityKey' },
+  // Gemini via OpenRouter
+  { value: 'openrouter', label: 'Gemini 2.5 Flash (OpenRouter)', keyField: 'openrouterKey' },
+  { value: 'openrouter-gemini-pro', label: 'Gemini 3 Pro (OpenRouter)', keyField: 'openrouterKey' },
+  { value: 'openrouter-gemini-31', label: 'Gemini 3.1 Flash (OpenRouter)', keyField: 'openrouterKey' },
+  // Gemini via Google AI Studio (direct)
+  { value: 'google-imagen', label: 'Gemini 2.5 Flash (Google AI)', keyField: 'googleAiKey' },
 ];
 
 export function AIPrompt({ onGenerate, isGenerating, chatHistory, onOpenSettings }: Props) {
