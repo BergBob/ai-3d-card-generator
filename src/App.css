@@ -1071,3 +1071,27 @@ button:disabled {
     flex-direction: column;
   }
 }
+
+/* Footer */
+.app-footer {
+  text-align: center;
+  padding: 12px 16px;
+  font-size: 12px;
+  color: #64748b;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.app-footer a {
+  color: #94a3b8;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.app-footer a:hover {
+  color: #e2e8f0;
+}
+
+.footer-sep {
+  margin: 0 8px;
+  color: #475569;
+}

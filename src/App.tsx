@@ -221,6 +221,13 @@ function App() {
         </section>
       </main>
       <SettingsDialog isOpen={showSettings} onClose={() => setShowSettings(false)} />
+      {hostedMode && (
+        <footer className="app-footer">
+          <a href="https://borishaggenmueller.de/impressum.html" target="_blank" rel="noopener noreferrer">Impressum</a>
+          <span className="footer-sep">·</span>
+          <a href="https://borishaggenmueller.de/datenschutz.html" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+        </footer>
+      )}
     </div>
   );
 }
