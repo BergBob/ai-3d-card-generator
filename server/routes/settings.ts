@@ -20,6 +20,12 @@ function maskKey(key: string): string {
 
 const router = Router();
 
+// GET: check if hosted mode (server has pre-configured keys)
+router.get('/mode', (_req, res) => {
+  const hasKey = !!(process.env.OPENROUTER_API_KEY || process.env.GOOGLE_AI_API_KEY);
+  res.json({ hosted: hasKey });
+});
+
 // GET: return masked keys
 router.get('/', (_req, res) => {
   try {
@@ -33,8 +39,13 @@ router.get('/', (_req, res) => {
   }
 });
 
-// POST: save keys to .env and update process.env
+// POST: save keys to .env and update process.env (disabled in hosted mode)
 router.post('/', (req, res) => {
+  const hasKey = !!(process.env.OPENROUTER_API_KEY || process.env.GOOGLE_AI_API_KEY);
+  if (hasKey) {
+    res.status(403).json({ error: 'Settings are disabled in hosted mode' });
+    return;
+  }
   try {
     let envContent = '';
     if (fs.existsSync(ENV_PATH)) {

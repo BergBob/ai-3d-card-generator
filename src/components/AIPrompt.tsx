@@ -12,6 +12,7 @@ interface Props {
   isGenerating: boolean;
   chatHistory: ChatMessage[];
   onOpenSettings: () => void;
+  hostedMode?: boolean;
 }
 
 interface AvailableModel {
@@ -28,7 +29,7 @@ const ALL_MODELS: { value: AIProvider; label: string; keyField: string }[] = [
   { value: 'google-imagen', label: 'Gemini 2.5 Flash (Google AI)', keyField: 'googleAiKey' },
 ];
 
-export function AIPrompt({ onGenerate, isGenerating, chatHistory, onOpenSettings }: Props) {
+export function AIPrompt({ onGenerate, isGenerating, chatHistory, onOpenSettings, hostedMode }: Props) {
   const [prompt, setPrompt] = useState('');
   const [provider, setProvider] = useState<AIProvider>('openrouter');
   const [availableModels, setAvailableModels] = useState<AvailableModel[]>([]);
@@ -117,26 +118,30 @@ export function AIPrompt({ onGenerate, isGenerating, chatHistory, onOpenSettings
             ➤
           </button>
         </div>
-        {availableModels.length > 0 ? (
-          <select
-            value={provider}
-            onChange={(e) => setProvider(e.target.value as AIProvider)}
-            disabled={isGenerating}
-            className="chat-provider-select"
-          >
-            {availableModels.map((m) => (
-              <option key={m.value} value={m.value}>{m.label}</option>
-            ))}
-          </select>
-        ) : (
-          <button type="button" className="chat-add-key-btn" onClick={onOpenSettings}>
-            Add API key to get started
-          </button>
-        )}
-        {availableModels.length > 0 && (
-          <button type="button" className="chat-more-models" onClick={onOpenSettings}>
-            More models? Add API keys
-          </button>
+        {!hostedMode && (
+          <>
+            {availableModels.length > 0 ? (
+              <select
+                value={provider}
+                onChange={(e) => setProvider(e.target.value as AIProvider)}
+                disabled={isGenerating}
+                className="chat-provider-select"
+              >
+                {availableModels.map((m) => (
+                  <option key={m.value} value={m.value}>{m.label}</option>
+                ))}
+              </select>
+            ) : (
+              <button type="button" className="chat-add-key-btn" onClick={onOpenSettings}>
+                Add API key to get started
+              </button>
+            )}
+            {availableModels.length > 0 && (
+              <button type="button" className="chat-more-models" onClick={onOpenSettings}>
+                More models? Add API keys
+              </button>
+            )}
+          </>
         )}
       </form>
     </div>
