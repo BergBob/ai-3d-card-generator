@@ -114,16 +114,42 @@ export function Preview3D({ stlUrl, config }: Props) {
     const ambientLight = new THREE.AmbientLight(0x505070, 0.5);
     scene.add(ambientLight);
 
-    // Tischfläche
-    const tableGeo = new THREE.PlaneGeometry(600, 600);
+    // Build-Plate mit Gitterlinien
+    const plateSize = 600;
+    const tableGeo = new THREE.PlaneGeometry(plateSize, plateSize);
     const tableMat = new THREE.MeshStandardMaterial({
-      color: 0x3a3a50,
+      color: 0x2a2a3a,
       roughness: 0.9,
     });
     const table = new THREE.Mesh(tableGeo, tableMat);
     table.receiveShadow = true;
     table.position.set(75, 50, -0.5);
     scene.add(table);
+
+    // Grid overlay
+    const gridGroup = new THREE.Group();
+    const gridSize = 300;
+    const gridStep = 10; // 10mm grid
+    const gridMat = new THREE.LineBasicMaterial({ color: 0xffffff, opacity: 0.12, transparent: true });
+    const gridMatBold = new THREE.LineBasicMaterial({ color: 0xffffff, opacity: 0.25, transparent: true });
+    for (let i = -gridSize; i <= gridSize; i += gridStep) {
+      const isBold = i % 50 === 0;
+      const mat = isBold ? gridMatBold : gridMat;
+      // Horizontal lines
+      const hGeo = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(-gridSize, i, 0),
+        new THREE.Vector3(gridSize, i, 0),
+      ]);
+      gridGroup.add(new THREE.Line(hGeo, mat));
+      // Vertical lines
+      const vGeo = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(i, -gridSize, 0),
+        new THREE.Vector3(i, gridSize, 0),
+      ]);
+      gridGroup.add(new THREE.Line(vGeo, mat));
+    }
+    gridGroup.position.set(75, 50, -0.4);
+    scene.add(gridGroup);
 
     const cardGroup = new THREE.Group();
     scene.add(cardGroup);
@@ -301,8 +327,8 @@ function frameMesh(
   state.controls.target.copy(center);
   state.camera.position.set(
     center.x,
-    center.y - cardDiag * 0.5,
-    center.z + cardDiag * 0.5,
+    center.y - cardDiag * 0.8,
+    center.z + cardDiag * 0.8,
   );
   state.controls.update();
 

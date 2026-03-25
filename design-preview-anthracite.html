@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI 3D Card Generator – Anthracite Dark</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0e0e0e;
+    color: #e0e0e0;
+    font-weight: 300;
+    line-height: 1.6;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    border-bottom: 1px solid #222;
+    background: #141414;
+  }
+
+  .header h1 {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #d4a054, #e8c885);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header-actions { display: flex; gap: 6px; }
+
+  .btn-icon {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    background: #1a1a1a;
+    color: #888;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  .btn-icon:hover { border-color: #555; color: #ccc; }
+
+  .btn-text {
+    height: 32px; padding: 0 14px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    background: #1a1a1a;
+    color: #aaa;
+    font-family: inherit; font-size: 12px; font-weight: 400;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-text:hover { background: #252525; color: #ddd; }
+
+  /* Main Layout */
+  .main {
+    display: flex;
+    height: calc(100vh - 57px);
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 260px; min-width: 260px;
+    border-right: 1px solid #222;
+    overflow-y: auto;
+    padding: 20px;
+    background: #111;
+  }
+
+  .panel {
+    background: #181818;
+    border: 1px solid #252525;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+
+  .panel h3 {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #666;
+    margin-bottom: 14px;
+  }
+
+  /* Slider */
+  .slider-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .slider-label { font-size: 12px; color: #999; }
+  .slider-value { font-size: 12px; font-weight: 500; color: #ccc; }
+
+  input[type="range"] {
+    width: 100%; height: 3px;
+    -webkit-appearance: none; appearance: none;
+    background: #333;
+    border-radius: 2px;
+    outline: none;
+    margin: 6px 0 12px 0;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: #d4a054;
+    cursor: pointer;
+    border: 2px solid #0e0e0e;
+    box-shadow: 0 0 6px rgba(212, 160, 84, 0.3);
+  }
+
+  /* Toggle */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .toggle-label { font-size: 12px; color: #999; }
+
+  .toggle {
+    width: 36px; height: 20px;
+    border-radius: 10px;
+    background: #333;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .toggle.active { background: #d4a054; }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  .toggle.active::after { transform: translateX(16px); }
+
+  /* Colors */
+  .color-row {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid #252525;
+  }
+  .color-row > span { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: #666; }
+
+  .color-item { display: flex; align-items: center; gap: 5px; }
+  .color-swatch {
+    width: 20px; height: 20px;
+    border-radius: 5px;
+    border: 1px solid #333;
+  }
+  .color-item span { font-size: 11px; color: #777; }
+
+  /* Chat */
+  .chat-area {
+    background: #1e1e1e;
+    border-radius: 8px;
+    padding: 14px;
+    min-height: 60px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #666;
+  }
+
+  .chat-input-row { display: flex; gap: 6px; }
+
+  .chat-input-row textarea {
+    flex: 1;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 12px; font-weight: 300;
+    resize: none; outline: none;
+    background: #1a1a1a;
+    color: #ccc;
+    transition: border-color 0.2s;
+  }
+  .chat-input-row textarea:focus { border-color: #d4a054; }
+  .chat-input-row textarea::placeholder { color: #555; }
+
+  .btn-send {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, #d4a054, #c4913e);
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-send:hover { opacity: 0.85; }
+
+  /* Export */
+  .export-row { display: flex; gap: 6px; }
+
+  .btn-export {
+    flex: 1; height: 36px;
+    border-radius: 8px; border: none;
+    font-family: inherit; font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .btn-export-primary {
+    background: linear-gradient(135deg, #d4a054, #c4913e);
+    color: #fff;
+  }
+  .btn-export-primary:hover { opacity: 0.85; }
+
+  .btn-export-secondary {
+    background: #1a1a1a;
+    color: #999;
+    border: 1px solid #333;
+  }
+  .btn-export-secondary:hover { background: #252525; color: #ccc; }
+
+  /* Preview Area */
+  .preview-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #0e0e0e;
+  }
+
+  .preview-3d {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: linear-gradient(180deg, #161616 0%, #0e0e0e 100%);
+  }
+
+  .preview-3d .card-mockup {
+    width: 420px;
+    height: 280px;
+    background: #2a2a2a;
+    border-radius: 12px;
+    transform: perspective(800px) rotateX(25deg) rotateZ(-5deg);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-mockup::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 8px,
+      rgba(255,255,255,0.015) 8px,
+      rgba(255,255,255,0.015) 9px
+    );
+  }
+
+  .card-relief {
+    font-size: 28px;
+    font-weight: 600;
+    color: #d4a054;
+    text-shadow: 0 2px 8px rgba(212, 160, 84, 0.2);
+    letter-spacing: 0.02em;
+    z-index: 1;
+  }
+
+  .btn-reset {
+    position: absolute;
+    top: 12px; right: 12px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    background: #1a1a1a;
+    font-family: inherit;
+    font-size: 11px;
+    color: #888;
+    cursor: pointer;
+  }
+  .btn-reset:hover { border-color: #555; color: #ccc; }
+
+  /* Preview Images */
+  .preview-images {
+    display: flex;
+    border-top: 1px solid #222;
+    height: 100px;
+  }
+
+  .preview-img-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px;
+    background: #141414;
+    border-right: 1px solid #222;
+  }
+  .preview-img-item:last-child { border-right: none; }
+  .preview-img-item span { font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: #555; }
+  .preview-img-item .img-placeholder {
+    width: 50px; height: 50px;
+    border-radius: 6px;
+    background: #1e1e1e;
+    border: 1px solid #2a2a2a;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 10px;
+    font-size: 11px;
+    color: #555;
+    border-top: 1px solid #222;
+    background: #111;
+  }
+  .footer a { color: #777; text-decoration: none; }
+  .footer a:hover { color: #ccc; }
+  .footer-sep { margin: 0 8px; color: #333; }
+</style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>AI 3D Card Generator</h1>
+    <div class="header-actions">
+      <button class="btn-icon">+</button>
+      <button class="btn-text">Save</button>
+      <button class="btn-text">Load</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <aside class="sidebar">
+
+      <div class="panel">
+        <h3>Card Settings</h3>
+        <div class="slider-row"><span class="slider-label">Width</span><span class="slider-value">150mm</span></div>
+        <input type="range" min="50" max="250" value="150" />
+        <div class="slider-row"><span class="slider-label">Height</span><span class="slider-value">100mm</span></div>
+        <input type="range" min="50" max="200" value="100" />
+        <div class="slider-row"><span class="slider-label">Base Thickness</span><span class="slider-value">1mm</span></div>
+        <input type="range" min="0" max="100" value="33" />
+        <div class="slider-row"><span class="slider-label">Relief Height</span><span class="slider-value">1.2mm</span></div>
+        <input type="range" min="0" max="100" value="40" />
+        <div class="slider-row"><span class="slider-label">Corner Radius</span><span class="slider-value">5mm</span></div>
+        <input type="range" min="0" max="20" value="5" />
+
+        <div class="toggle-row"><span class="toggle-label">Invert</span><div class="toggle active"></div></div>
+        <div class="toggle-row"><span class="toggle-label">Border</span><div class="toggle"></div></div>
+
+        <div class="color-row"><span>Preview Colors</span></div>
+        <div style="display:flex;gap:14px;margin-top:8px;">
+          <div class="color-item"><div class="color-swatch" style="background:#e0e0e0;"></div><span>Base</span></div>
+          <div class="color-item"><div class="color-swatch" style="background:#d44040;"></div><span>Relief</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Design Chat</h3>
+        <div class="chat-area">Describe your card design — you can refine the result afterwards.</div>
+        <div class="chat-input-row">
+          <textarea rows="2" placeholder="e.g.: Birthday cake with candles..."></textarea>
+          <button class="btn-send">&#10148;</button>
+        </div>
+      </div>
+
+      <div class="export-row">
+        <button class="btn-export btn-export-primary">Download 3MF</button>
+        <button class="btn-export btn-export-secondary">Download STL</button>
+      </div>
+
+    </aside>
+
+    <section class="preview-area">
+      <div class="preview-3d">
+        <div class="card-mockup">
+          <span class="card-relief">Happy Birthday</span>
+        </div>
+        <button class="btn-reset">Reset View</button>
+      </div>
+      <div class="preview-images">
+        <div class="preview-img-item"><span>Original</span><div class="img-placeholder"></div></div>
+        <div class="preview-img-item"><span>Heightmap (Relief)</span><div class="img-placeholder"></div></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a href="#">Impressum</a>
+    <span class="footer-sep">&middot;</span>
+    <a href="#">Datenschutz</a>
+  </footer>
+
+</body>
+</html>
