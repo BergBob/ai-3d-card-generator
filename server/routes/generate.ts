@@ -16,6 +16,14 @@ function hashIp(ip: string): string {
   return createHash('sha256').update(ip + 'card-gen-salt').digest('hex').slice(0, 16);
 }
 
+function getRemainingCount(ip: string): number {
+  const hash = hashIp(ip);
+  const now = Date.now();
+  const entry = usageMap.get(hash);
+  if (!entry || now > entry.resetAt) return DAILY_LIMIT;
+  return Math.max(0, DAILY_LIMIT - entry.count);
+}
+
 function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
   const hash = hashIp(ip);
   const now = Date.now();
@@ -40,6 +48,17 @@ function isHostedMode(): boolean {
   return !!(process.env.OPENROUTER_API_KEY || process.env.GOOGLE_AI_API_KEY);
 }
 
+// GET: check remaining quota (hosted mode only)
+router.get('/quota', (req, res) => {
+  if (!isHostedMode()) {
+    res.json({ limited: false });
+    return;
+  }
+  const ip = req.headers['x-forwarded-for'] as string || req.ip || 'unknown';
+  const remaining = getRemainingCount(ip);
+  res.json({ limited: true, remaining, total: DAILY_LIMIT });
+});
+
 router.post('/', async (req, res) => {
   try {
     // Rate limiting in hosted mode
@@ -48,7 +67,9 @@ router.post('/', async (req, res) => {
       const { allowed, remaining } = checkRateLimit(ip);
       if (!allowed) {
         res.status(429).json({
-          error: `Daily limit reached (${DAILY_LIMIT} images per day). Please try again tomorrow.`,
+          error: 'RATE_LIMIT',
+          remaining: 0,
+          total: DAILY_LIMIT,
         });
         return;
       }

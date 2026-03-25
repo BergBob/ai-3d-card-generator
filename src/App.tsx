@@ -25,15 +25,34 @@ function App() {
   const [generationHistory, setGenerationHistory] = useState<HistoryEntry[]>([]);
 
   const [hostedMode, setHostedMode] = useState(false);
+  const [quota, setQuota] = useState<{ limited: boolean; remaining: number; total: number } | null>(null);
+  const [rateLimitReached, setRateLimitReached] = useState(false);
 
   const previewTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prevStlUrlRef = useRef<string | null>(null);
 
-  // Check if running in hosted mode
+  // Check if running in hosted mode + quota
   useEffect(() => {
     fetch('/api/settings/mode')
       .then(r => r.json())
       .then(data => setHostedMode(data.hosted))
+      .catch(() => {});
+    fetch('/api/generate/quota')
+      .then(r => r.json())
+      .then(data => {
+        setQuota(data);
+        if (data.limited && data.remaining === 0) setRateLimitReached(true);
+      })
+      .catch(() => {});
+  }, []);
+
+  const refreshQuota = useCallback(() => {
+    fetch('/api/generate/quota')
+      .then(r => r.json())
+      .then(data => {
+        setQuota(data);
+        if (data.limited && data.remaining === 0) setRateLimitReached(true);
+      })
       .catch(() => {});
   }, []);
 
@@ -119,12 +138,20 @@ function App() {
 
         if (!response.ok) {
           const err = await response.json();
+          if (err.error === 'RATE_LIMIT') {
+            setRateLimitReached(true);
+            refreshQuota();
+            setChatHistory((prev) => [...prev, { role: 'assistant', text: '__RATE_LIMIT__' }]);
+            setIsGenerating(false);
+            return;
+          }
           throw new Error(err.error || 'Generation failed');
         }
 
         const data: GenerateImageResponse = await response.json();
         applyGeneration(data);
         setPromptHistory(allPrompts);
+        refreshQuota();
 
         setChatHistory((prev) => [
           ...prev,
@@ -188,19 +215,37 @@ function App() {
       <main className="app-main">
         <aside className="sidebar">
           <CardSettings config={config} onChange={setConfig} />
-          <AIPrompt
-            onGenerate={handleGenerate}
-            isGenerating={isGenerating}
-            chatHistory={chatHistory}
-            onOpenSettings={() => setShowSettings(true)}
-            hostedMode={hostedMode}
-          />
+          {quota?.limited && (
+            <div className="quota-bar">
+              {quota.remaining} of {quota.total} images remaining today
+            </div>
+          )}
+          {rateLimitReached && (
+            <div className="rate-limit-box">
+              <div className="rate-limit-icon">⏳</div>
+              <div className="rate-limit-title">Daily limit reached</div>
+              <p>You've used all {quota?.total ?? 5} free images for today. Come back tomorrow for more!</p>
+              <p className="rate-limit-alt">Want unlimited access? Run the app locally — it's free and open source:</p>
+              <a href="https://github.com/BergBob/ai-3d-card-generator" target="_blank" rel="noopener noreferrer" className="rate-limit-link">
+                ⬇ Download from GitHub
+              </a>
+            </div>
+          )}
+          {!rateLimitReached && (
+            <AIPrompt
+              onGenerate={handleGenerate}
+              isGenerating={isGenerating}
+              chatHistory={chatHistory}
+              onOpenSettings={() => setShowSettings(true)}
+              hostedMode={hostedMode}
+            />
+          )}
           <HistoryGallery
             history={generationHistory}
             currentId={generationId}
             onRestore={handleRestore}
           />
-          {error && <div className="error-msg">{error}</div>}
+          {error && !rateLimitReached && <div className="error-msg">{error}</div>}
           <ExportButton generationId={generationId} config={config} />
         </aside>
         <section className="preview-area">

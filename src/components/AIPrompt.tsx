@@ -82,7 +82,7 @@ export function AIPrompt({ onGenerate, isGenerating, chatHistory, onOpenSettings
             Describe your card design — you can refine the result in the chat afterwards.
           </div>
         )}
-        {chatHistory.map((msg, i) => (
+        {chatHistory.filter(m => m.text !== '__RATE_LIMIT__').map((msg, i) => (
           <div key={i} className={`chat-msg chat-msg-${msg.role}`}>
             <div className="chat-msg-label">
               {msg.role === 'user' ? 'You' : 'AI'}
