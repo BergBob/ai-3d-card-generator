@@ -118,6 +118,12 @@ export function AIPrompt({ onGenerate, isGenerating, chatHistory, onOpenSettings
             ➤
           </button>
         </div>
+        {hostedMode && (
+          <p className="chat-consent-hint">
+            By clicking Generate, you agree that your input will be sent to OpenRouter/Google (USA) for processing.{' '}
+            <a href="https://borishaggenmueller.de/datenschutz.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+          </p>
+        )}
         {!hostedMode && (
           <>
             {availableModels.length > 0 ? (
