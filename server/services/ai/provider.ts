@@ -12,7 +12,8 @@ const PROMPT_PREFIX =
   'Create a high-contrast relief-style image suitable for embossing on a greeting card. ' +
   'Use strong contrast between foreground elements and background. ' +
   'The image should work well as a heightmap where bright/white areas will be raised and dark/black areas will be flat. ' +
-  'Style: clean, bold shapes with clear edges. ';
+  'Style: clean, bold shapes with clear edges. ' +
+  'IMPORTANT: Do NOT add any border, frame, or decorative edge around the image. The design should go edge-to-edge with no surrounding frame or outline. ';
 
 export function augmentPrompt(userPrompt: string): string {
   return PROMPT_PREFIX + userPrompt;

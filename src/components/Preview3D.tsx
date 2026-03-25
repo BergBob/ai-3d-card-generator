@@ -297,13 +297,15 @@ export function Preview3D({ stlUrl, config }: Props) {
           overflow: 'hidden',
         }}
       />
-      <button
-        className="reset-camera-btn"
-        onClick={handleResetCamera}
-        title="Reset camera view"
-      >
-        Reset View
-      </button>
+      {stlUrl && (
+        <button
+          className="reset-camera-btn"
+          onClick={handleResetCamera}
+          title="Reset camera view"
+        >
+          Reset View
+        </button>
+      )}
     </div>
   );
 }
