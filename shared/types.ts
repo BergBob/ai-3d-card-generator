@@ -55,5 +55,5 @@ export const DEFAULT_CONFIG: CardConfig = {
   cornerRadius: 5,
   border: { enabled: false, width: 3, height: 1.2 },
   baseColor: '#e0e0e0',
-  reliefColor: '#cc3333',
+  reliefColor: '#818cf8',
 };

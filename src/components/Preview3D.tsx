@@ -241,7 +241,7 @@ export function Preview3D({ stlUrl, config }: Props) {
         // Alles knapp über Basis-Oberseite = Relief
         const baseLevel = config.baseThickness + 0.01;
         const bHex = new THREE.Color(config.baseColor ?? '#e0e0e0');
-        const rHex = new THREE.Color(config.reliefColor ?? '#cc3333');
+        const rHex = new THREE.Color(config.reliefColor ?? '#818cf8');
         const baseColor = [bHex.r, bHex.g, bHex.b];
         const reliefColor = [rHex.r, rHex.g, rHex.b];
 

@@ -19,6 +19,7 @@ function App() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [showPreviewImages, setShowPreviewImages] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [promptHistory, setPromptHistory] = useState<string[]>([]);
   const [generationHistory, setGenerationHistory] = useState<HistoryEntry[]>([]);
@@ -207,15 +208,23 @@ function App() {
             <Preview3D stlUrl={stlUrl} config={config} />
           </div>
           {originalUrl && (
-            <div className="preview-images">
-              <div className="preview-image-item">
-                <span>Original</span>
-                <img src={originalUrl} alt="Original" />
-              </div>
-              <div className="preview-image-item">
-                <span>Heightmap (Relief)</span>
-                <img src={heightmapUrl!} alt="Heightmap" />
-              </div>
+            <div className="preview-images-section">
+              <h3 className="collapsible-header" onClick={() => setShowPreviewImages(!showPreviewImages)}>
+                Source Images
+                <span className={`collapse-arrow ${showPreviewImages ? 'open' : ''}`}>▸</span>
+              </h3>
+              {showPreviewImages && (
+                <div className="preview-images">
+                  <div className="preview-image-item">
+                    <span>Original</span>
+                    <img src={originalUrl} alt="Original" />
+                  </div>
+                  <div className="preview-image-item">
+                    <span>Heightmap (Relief)</span>
+                    <img src={heightmapUrl!} alt="Heightmap" />
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </section>

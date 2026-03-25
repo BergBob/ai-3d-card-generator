@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { CardConfig } from '../../shared/types.ts';
 
 interface Props {
@@ -40,13 +41,18 @@ function Slider({
 }
 
 export function CardSettings({ config, onChange }: Props) {
+  const [collapsed, setCollapsed] = useState(true);
   const update = (key: keyof CardConfig, value: number) => {
     onChange({ ...config, [key]: value });
   };
 
   return (
     <div className="panel">
-      <h3>Card Settings</h3>
+      <h3 className="collapsible-header" onClick={() => setCollapsed(!collapsed)}>
+        Card Settings
+        <span className={`collapse-arrow ${collapsed ? '' : 'open'}`}>▸</span>
+      </h3>
+      {!collapsed && <>
       <Slider
         label="Width"
         value={config.width}
@@ -151,12 +157,13 @@ export function CardSettings({ config, onChange }: Props) {
             <span>Relief</span>
             <input
               type="color"
-              value={config.reliefColor ?? '#cc3333'}
+              value={config.reliefColor ?? '#818cf8'}
               onChange={(e) => onChange({ ...config, reliefColor: e.target.value })}
             />
           </label>
         </div>
       </div>
+      </>}
     </div>
   );
 }
